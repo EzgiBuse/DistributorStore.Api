@@ -12,6 +12,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
     <PackageReference Include="LinqKit" Version="1.2.4" />
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
@@ -29,6 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DistributorStore.Base\DistributorStore.Base.csproj" />
     <ProjectReference Include="..\DistributorStore.Data\DistributorStore.Data.csproj" />
+    <ProjectReference Include="..\DistributorStore.Operation\DistributorStore.Operation.csproj" />
+    <ProjectReference Include="..\DistributorStore.Schema\DistributorStore.Schema.csproj" />
   </ItemGroup>
 
 </Project>

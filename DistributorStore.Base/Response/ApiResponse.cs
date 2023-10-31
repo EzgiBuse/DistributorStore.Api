@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 namespace DistributorStore.Base.Response
 {
     //An Api Response Class
-    public class ApiResponse
+    public partial class ApiResponse
     {
+       
+
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);
@@ -28,12 +30,14 @@ namespace DistributorStore.Base.Response
             }
         }
 
+        
+
         public bool Success { get; set; }
         public string Message { get; set; }
 
     }
 
-    public class ApiResponse<T>
+    public partial class ApiResponse<T>
     {
         public bool Success { get; set; }
         public string Message { get; set; }
