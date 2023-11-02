@@ -20,8 +20,10 @@ namespace DistributorStore.Data.Uow
             this.dbContext = dbContext;
 
             OrderRepository = new GenericRepository<Order>(dbContext);
+            DealerRepository = new GenericRepository<Dealer>(dbContext);
+            //OrderDetailRepository = new GenericRepository<OrderDetails>(dbContext);
             ProductRepository = new GenericRepository<Product>(dbContext);
-            OrderDetailsRepository = new GenericRepository<OrderDetails>(dbContext);
+            OrderDetailRepository = new GenericRepository<OrderDetails>(dbContext);
             UserRepository = new GenericRepository<User>(dbContext);
            
         }
@@ -58,9 +60,9 @@ namespace DistributorStore.Data.Uow
 
         public IGenericRepository<Product> ProductRepository { get; private set; }
 
-        public IGenericRepository<OrderDetails> OrderDetailsRepository { get; private set; }
+       // public IGenericRepository<OrderDetails> OrderDetailsRepository { get; private set; }
         public IGenericRepository<User> UserRepository { get; private set; }
 
-        public IGenericRepository<OrderDetails> OrderDetailRepository => throw new NotImplementedException();
+        public IGenericRepository<OrderDetails> OrderDetailRepository { get; private set; }
     }
 }

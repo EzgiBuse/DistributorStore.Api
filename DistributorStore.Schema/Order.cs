@@ -15,7 +15,8 @@ namespace DistributorStore.Schema
 
     public class OrderRequest
     {
-        
+        public int DealerId { get; set; }
+        public int PaymentMethod { get; set; }
         public List<OrderItemRequest> OrderItems { get; set; }
        
     }

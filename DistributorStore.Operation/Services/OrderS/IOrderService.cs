@@ -1,5 +1,6 @@
 ﻿using DistributorStore.Base.Response;
 using DistributorStore.Data.Domain;
+using DistributorStore.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace DistributorStore.Operation.Services.OrderS
         ApiResponse CancelOrderAdmin(Order order);
         ApiResponse ApproveOrderAdmin(Order o);
         ApiResponse<List<Order>> ListOrdersDealer(int dealerid);
-        
+        ApiResponse CreateOrderDealer(OrderRequest request);
     }
 }

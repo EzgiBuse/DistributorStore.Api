@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using DistributorStore.Data.Domain;
 using Azure;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using DistributorStore.Schema;
+using MediatR.NotificationPublishers;
 
 namespace DistributorStore.Operation.Services.OrderS
 {
@@ -89,7 +91,8 @@ namespace DistributorStore.Operation.Services.OrderS
         public ApiResponse<List<Order>> ListOrdersDealer(int dealerid)
         {
             Dealer dealer = unitofwork.DynamicRepository<Dealer>().GetById(dealerid);
-            if(dealer == null)
+          
+            if (dealer == null)
             {
                 return new ApiResponse<List<Order>>("dealer not found")
                 {
@@ -98,7 +101,7 @@ namespace DistributorStore.Operation.Services.OrderS
                     Success = false
                 };
             }
-            //retorns the list of orders for that dealerid
+            //returns the list of orders for that dealerid
             var orders = unitofwork.OrderRepository.Where(o=>o.DealerID == dealerid).ToList();
 
 
@@ -106,6 +109,97 @@ namespace DistributorStore.Operation.Services.OrderS
 
             return new ApiResponse<List<Order>>(orders);
         }
+
+        public ApiResponse CreateOrderDealer(OrderRequest request)
+        {
+            var dealer = unitofwork.DealerRepository.GetById(request.DealerId);
+            //returns invalid order if the order is null
+            if (request == null || request.OrderItems == null || request.OrderItems.Count == 0 || request.DealerId ==null || dealer ==null)
+            {
+                return new ApiResponse { Success = false, Message = "Invalid order data" };
+            }
+            double totalOrderCost = 0;
+            
+            //checking if requested order amount of a product is available
+            foreach (var item in request.OrderItems)
+            {
+                var product = unitofwork.ProductRepository.GetById(item.ProductId);
+
+                if (product == null || product.StockQuantity < item.Quantity)
+                {
+                    return new ApiResponse { Success = false, Message = $"Insufficient stock for Product ID: {item.ProductId}" };
+                }
+
+
+
+                // Calculate the total order cost with the dealer profit margin
+                
+                totalOrderCost += (product.Price * (1 + dealer.ProfitMargin)) * item.Quantity;
+            }
+
+            // Check the dealer's balance if the payment method is Balance(2)
+            if (request.PaymentMethod == 2)
+            {
+                if(dealer.Limit < (decimal)totalOrderCost)
+                {
+                    return new ApiResponse { Success = false, Message = $"Insufficient balance" };
+                }
+            }
+            // Process payment method
+            switch (request.PaymentMethod)
+            {
+                case 0:
+                    // No action needed for EFT(0)
+                    break;
+                case 1:
+                    // Implement credit card payment logic here(1)
+                    break;
+                case 2:
+                    dealer.Limit = dealer.Limit - (decimal)totalOrderCost;
+                    unitofwork.DealerRepository.Update(dealer);
+                    break;
+                default:
+                    return new ApiResponse { Success = false, Message = "Invalid payment method" };
+            }
+
+            // Create the order
+            var order = new Order
+            {
+                DealerID = request.DealerId,
+                OrderDate = DateTime.Now,
+                Status = OrderStatus.WaitingforApproval, 
+                PaymentMethod = (PaymentMethods)Convert.ToInt32(request.PaymentMethod),
+                TotalAmount = Convert.ToDouble(totalOrderCost)
+            };
+
+            // Add the order to the database
+            unitofwork.OrderRepository.Insert(order);
+            unitofwork.OrderRepository.Save(); // Save changes to the database
+            int orderId = order.OrderID;
+            // Add order details
+            foreach (var item in request.OrderItems)
+            {
+                var orderDetail = new OrderDetails
+                {
+                    OrderID = orderId,
+                    ProductID = item.ProductId,
+                    Quantity = item.Quantity
+                };
+
+                //updating product stock values after ordering
+                var product = unitofwork.ProductRepository.GetById(item.ProductId);
+                product.StockQuantity = product.StockQuantity - item.Quantity;
+                unitofwork.ProductRepository.Update(product);
+                unitofwork.ProductRepository.Save();
+                // Add the order detail to the database
+              
+                unitofwork.OrderDetailRepository.Insert(orderDetail);
+                unitofwork.OrderDetailRepository.Save(); // Save changes to the database
+            }
+
+            return new ApiResponse { Success = true, Message = "Order Created Successfully" };
+        }
+       
 
     }
 }

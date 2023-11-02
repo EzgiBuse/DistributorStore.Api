@@ -1,6 +1,7 @@
 using DistributorStore.Data.ApplicationDbContext;
 using DistributorStore.Data.Uow;
 using DistributorStore.Operation.Services.OrderS;
+using DistributorStore.Operation.Services.ProductS;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ internal class Program
         options.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlConnection")));
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<IOrderService, OrderService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         //adding JWT token 

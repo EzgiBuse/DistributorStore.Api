@@ -70,7 +70,7 @@ namespace DistributorStore.Data.Repository
         {
             var query = dbContext.Set<TEntity>().AsQueryable();
             query = includes.Aggregate(query, (currenct, inc) => currenct.Include(inc));
-            return query.FirstOrDefault();// todo
+            return query.FirstOrDefault();
         }
 
         public List<TEntity> GetAllWithInclude(params string[] includes)
