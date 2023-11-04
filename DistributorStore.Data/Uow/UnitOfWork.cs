@@ -21,11 +21,12 @@ namespace DistributorStore.Data.Uow
 
             OrderRepository = new GenericRepository<Order>(dbContext);
             DealerRepository = new GenericRepository<Dealer>(dbContext);
-            //OrderDetailRepository = new GenericRepository<OrderDetails>(dbContext);
+           
             ProductRepository = new GenericRepository<Product>(dbContext);
             OrderDetailRepository = new GenericRepository<OrderDetails>(dbContext);
             UserRepository = new GenericRepository<User>(dbContext);
-           
+            MessageRepository = new GenericRepository<Message>(dbContext);
+
         }
 
         public void Complete()
@@ -64,5 +65,7 @@ namespace DistributorStore.Data.Uow
         public IGenericRepository<User> UserRepository { get; private set; }
 
         public IGenericRepository<OrderDetails> OrderDetailRepository { get; private set; }
+
+        public IGenericRepository<Message> MessageRepository { get; private set; }
     }
 }

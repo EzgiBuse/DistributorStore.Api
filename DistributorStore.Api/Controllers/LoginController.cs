@@ -1,4 +1,5 @@
 ﻿using DistributorStore.Base.Response;
+using DistributorStore.Base.Token;
 using DistributorStore.Data.ApplicationDbContext;
 using DistributorStore.Data.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -52,6 +53,8 @@ namespace DistributorStore.Api.Controllers
                     new Claim("Password",user.Password)
 
                 }),
+                Issuer = _configuration["JwtConfig:Issuer"],
+                Audience = _configuration["JwtConfig:Audience"],
                 Expires = DateTime.UtcNow.AddHours(1), // Token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

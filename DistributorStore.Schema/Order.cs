@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DistributorStore.Data.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,11 @@ namespace DistributorStore.Schema
         public int PaymentMethod { get; set; }
         public List<OrderItemRequest> OrderItems { get; set; }
        
+    }
+
+    public class DetailedOrder
+    {
+        public Order order { get; set; }
+        public List<OrderDetails> Details { get; set; }
     }
 }

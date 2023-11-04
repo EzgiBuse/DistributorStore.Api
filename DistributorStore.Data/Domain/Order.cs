@@ -47,6 +47,14 @@ namespace DistributorStore.Data.Domain
         Cancelled
 
     }
+    //Enum for checking wanted report window
+    public enum ReportWindow
+    {
+        Daily,
+        Weekly,
+        Monthly
+
+    }
     public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)

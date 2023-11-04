@@ -20,7 +20,8 @@ namespace DistributorStore.Data.Uow
         IGenericRepository<OrderDetails> OrderDetailRepository { get; }
         IGenericRepository<Product> ProductRepository { get; }
         IGenericRepository<User> UserRepository { get; }
-      
+        IGenericRepository<Message> MessageRepository { get; }
+
 
 
 
